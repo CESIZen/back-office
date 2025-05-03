@@ -2,6 +2,7 @@ import * as React from "react"
 import { Slot } from "@radix-ui/react-slot"
 import { VariantProps, cva } from "class-variance-authority"
 import { PanelLeftIcon } from "lucide-react"
+import { useAuth } from "@/context/AuthContext";
 
 import { useIsMobile } from "@/hooks/use-mobile"
 import { cn } from "@/lib/utils"
@@ -50,6 +51,8 @@ function useSidebar() {
 
   return context
 }
+
+
 
 function SidebarProvider({
   defaultOpen = true,
@@ -342,14 +345,28 @@ function SidebarHeader({ className, ...props }: React.ComponentProps<"div">) {
 }
 
 function SidebarFooter({ className, ...props }: React.ComponentProps<"div">) {
+  const { logout } = useAuth();
+
+  const handleLogout = () => {
+    logout();
+    console.log("Déconnecté avec succès");
+  };
+
   return (
     <div
       data-slot="sidebar-footer"
       data-sidebar="footer"
       className={cn("flex flex-col gap-2 p-2", className)}
       {...props}
-    />
-  )
+    >
+      <Button
+        variant="destructive"
+        onClick={handleLogout}
+      >
+        Déconnexion
+      </Button>
+    </div>
+  );
 }
 
 function SidebarSeparator({

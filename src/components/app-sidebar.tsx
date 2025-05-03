@@ -2,7 +2,7 @@ import * as React from "react"
 
 import {
   Sidebar,
-  SidebarContent,
+  SidebarContent, SidebarFooter,
   SidebarGroup,
   SidebarHeader,
   SidebarMenu,
@@ -93,6 +93,7 @@ export default function AppSidebar({ ...props }: React.ComponentProps<typeof Sid
           </SidebarMenu>
         </SidebarGroup>
       </SidebarContent>
+      <SidebarFooter />
       <SidebarRail />
     </Sidebar>
   )

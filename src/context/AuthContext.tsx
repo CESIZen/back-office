@@ -1,6 +1,5 @@
 import { createContext, useContext, useState, ReactNode } from "react";
 import { login } from "@/services/AuthService";
-import { useEffect } from "react";
 
 
 export interface User {
