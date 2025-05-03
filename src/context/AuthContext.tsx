@@ -1,5 +1,7 @@
 import { createContext, useContext, useState, ReactNode } from "react";
 import { login } from "@/services/AuthService";
+import { useEffect } from "react";
+
 
 export interface User {
   name: string;
@@ -26,7 +28,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       if (response.user && response.user.roleId !== 1) {
         throw new Error("Seuls les administrateurs peuvent se connecter");
       }
-      localStorage.setItem("userToken", response.token);
+      localStorage.setItem("userToken", response.access_token);
+      console.log('Local Storage Auth Provider',localStorage)
       setUser(response.user);
     } else {
       throw new Error("Échec de la connexion");
@@ -39,6 +42,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const isAuthenticated = !!localStorage.getItem("userToken");
+
+  // useEffect(() => {
+  //   const token = localStorage.getItem("userToken");
+  //   if (!token && user) {
+  //     handleLogout();
+  //   }
+  // }, [user]);
 
   return (
     <AuthContext.Provider value={{ user, login: handleLogin, logout: handleLogout, isAuthenticated }}>
