@@ -6,6 +6,7 @@ import LoginPage from "@/pages/Auth/Login.tsx"
 import {AuthProvider} from "@/context/AuthContext.tsx";
 import PrivateRoute from "@/components/PrivateRoute.tsx";
 import NotFound from "@/pages/NotFound.tsx";
+import CreateUser from "@/pages/user/CreateUser.tsx";
 
 function AppRoutes() {
   const location = useLocation()
@@ -29,6 +30,7 @@ function AppRoutes() {
           <Route path="/" element={<Navigate to="/dashboard" />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/users" element={<User />} />
+          <Route path="/create-user" element={<CreateUser />} />
           <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>
