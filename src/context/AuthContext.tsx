@@ -42,13 +42,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const isAuthenticated = !!localStorage.getItem("userToken");
 
-  // useEffect(() => {
-  //   const token = localStorage.getItem("userToken");
-  //   if (!token && user) {
-  //     handleLogout();
-  //   }
-  // }, [user]);
-
   return (
     <AuthContext.Provider value={{ user, login: handleLogin, logout: handleLogout, isAuthenticated }}>
       {children}
