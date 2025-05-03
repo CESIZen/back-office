@@ -350,6 +350,7 @@ function SidebarFooter({ className, ...props }: React.ComponentProps<"div">) {
   const handleLogout = () => {
     logout();
     console.log("Déconnecté avec succès");
+    window.location.href = "/login";
   };
 
   return (
