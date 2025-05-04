@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { getUserById, updateUser } from "@/services/UserService";
-import {getRoleById, getAllRoles} from "@/services/RoleService";
+import { getAllRoles } from "@/services/RoleService";
 
 export default function EditUser() {
   const { id } = useParams<{ id: string }>();
