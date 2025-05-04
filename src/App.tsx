@@ -8,6 +8,15 @@ import PrivateRoute from "@/components/PrivateRoute.tsx";
 import NotFound from "@/pages/NotFound.tsx";
 import CreateUser from "@/pages/user/CreateUser.tsx";
 import EditUser from "@/pages/user/EditUser.tsx";
+import Role from "@/pages/role/Role.tsx";
+import EditRole from "@/pages/role/EditRole.tsx";
+import CreateRole from "@/pages/role/CreateRole.tsx";
+import CreateCategory from "@/pages/informationCategory/CreateCategory.tsx";
+import EditCategory from "@/pages/informationCategory/EditCategory.tsx";
+import Category from "@/pages/informationCategory/Category.tsx";
+import Information from "@/pages/information/Information.tsx";
+import CreateInformation from "@/pages/information/CreateInformation.tsx";
+import EditInformation from "@/pages/information/EditInformation.tsx";
 
 function AppRoutes() {
   const location = useLocation()
@@ -33,6 +42,15 @@ function AppRoutes() {
           <Route path="/users" element={<User />} />
           <Route path="/create-user" element={<CreateUser />} />
           <Route path="/edit-user/:id" element={<EditUser />} />
+          <Route path="/roles" element={<Role />} />
+          <Route path="/create-role" element={<CreateRole />} />
+          <Route path="/edit-role/:id" element={<EditRole />} />
+          <Route path="/categories" element={<Category />} />
+          <Route path="/create-category" element={<CreateCategory />} />
+          <Route path="/edit-category/:id" element={<EditCategory />} />
+          <Route path="/informations" element={<Information />} />
+          <Route path="/create-informations" element={<CreateInformation />} />
+          <Route path="/edit-informations/:id" element={<EditInformation />} />
           <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>
