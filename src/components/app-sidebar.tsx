@@ -32,7 +32,6 @@ const data = {
         {
           title: "Roles",
           url: "/roles",
-          isActive: true,
         },
         {
           title: "Informations",
@@ -62,7 +61,7 @@ export default function AppSidebar({ ...props }: React.ComponentProps<typeof Sid
         <SidebarMenu>
           <SidebarMenuItem>
               <a href="#" className="flex flex-col items-center gap-2">
-                <img src="../../public/logo.png" alt="Logo" />
+                <img src="/logo.png" alt="Logo" />
               </a>
           </SidebarMenuItem>
         </SidebarMenu>

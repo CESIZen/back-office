@@ -9,11 +9,12 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { getAllUsers } from "@/services/UserService";
+import {deleteUser, getAllUsers} from "@/services/UserService";
 import { getRoleById } from "@/services/RoleService";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import {Plus} from "lucide-react";
+import {Pencil, Plus, Trash} from "lucide-react";
+import {EnumRole} from "@/types/Role.ts";
 
 export default function User() {
   const { isAuthenticated } = useAuth();
@@ -56,11 +57,19 @@ export default function User() {
   };
 
   const handleEdit = (id: number) => {
-    console.log("Modifier l'utilisateur avec l'ID :", id);
+    navigate(`/edit-user/${id}`);
   };
 
-  const handleDelete = (id: number) => {
-    console.log("Supprimer l'utilisateur avec l'ID :", id);
+  const handleDelete = async (id: number) => {
+    if (window.confirm("Êtes-vous sûr de vouloir supprimer cet utilisateur ?")) {
+      try {
+        await deleteUser(id);
+        setUsers((prevUsers) => prevUsers.filter((user) => user.id !== id));
+        console.log("Utilisateur supprimé avec succès");
+      } catch (error) {
+        console.error("Erreur lors de la suppression de l'utilisateur :", error);
+      }
+    }
   };
 
   if (!isAuthenticated) {
@@ -91,19 +100,18 @@ export default function User() {
               <TableCell className="font-medium">{user.name}</TableCell>
               <TableCell>{user.email}</TableCell>
               <TableCell className="text-right">{roles[user.roleId] || "Chargement..."}</TableCell>
-              <TableCell className="text-right">
-                <button
-                  className="mr-2 text-blue-500 hover:underline"
+              <TableCell className="text-right space-x-2">
+                <Button
                   onClick={() => handleEdit(user.id)}
                 >
-                  Modifier
-                </button>
-                <button
-                  className="text-red-500 hover:underline"
+                  <Pencil />
+                </Button>
+                <Button
+                  variant="destructive"
                   onClick={() => handleDelete(user.id)}
                 >
-                  Supprimer
-                </button>
+                  <Trash />
+                </Button>
               </TableCell>
             </TableRow>
           ))}

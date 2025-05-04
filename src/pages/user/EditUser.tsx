@@ -1,32 +1,70 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { EnumRole } from "@/types/Role";
-import { createUser } from "@/services/UserService";
+import { getUserById, updateUser } from "@/services/UserService";
+import {getRoleById, getAllRoles} from "@/services/RoleService";
 
-export default function CreateUser() {
+export default function EditUser() {
+  const { id } = useParams<{ id: string }>();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [roleId, setRoleId] = useState<number | "">("");
+  const [roles, setRoles] = useState<{ id: number; name: string }[]>([]);
   const [error, setError] = useState("");
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        if (!id) {
+          console.error("ID manquant dans l'URL");
+          return;
+        }
+        const user = await getUserById(Number(id));
+        if (user) {
+          setName(user.name || "");
+          setEmail(user.email || "");
+          setRoleId(user.roleId || "");
+        } else {
+          console.error("Aucun utilisateur trouvé");
+        }
+      } catch (err) {
+        console.error("Erreur lors de la récupération de l'utilisateur :", err);
+        setError((err as Error).message || "Erreur lors de la récupération de l'utilisateur");
+      }
+    };
+
+    const fetchRoles = async () => {
+      try {
+        const rolesData = await getAllRoles();
+        setRoles(rolesData);
+      } catch (err) {
+        console.error("Erreur lors de la récupération des rôles :", err);
+        setRoles([]);
+      }
+    };
+
+    fetchUser();
+    fetchRoles();
+  }, [id]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
 
     try {
-      await createUser(name, email, password, Number(roleId));
+      if (!id) return;
+      await updateUser(Number(id), name, email, password || undefined, roleId ? Number(roleId) : undefined);
       navigate("/users");
-    } catch (err: any) {
-      setError(err.message || "Une erreur est survenue");
+    } catch (err) {
+      setError((err as Error).message || "Une erreur est survenue");
     }
   };
 
   return (
     <div>
-      <h1 className="text-2xl font-bold mb-4">Créer un utilisateur</h1>
+      <h1 className="text-2xl font-bold mb-4">Modifier un utilisateur</h1>
       {error && <p className="text-red-500 mb-4">{error}</p>}
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
@@ -57,7 +95,7 @@ export default function CreateUser() {
         </div>
         <div>
           <label htmlFor="password" className="block text-sm font-medium">
-            Mot de passe
+            Mot de passe (laisser vide pour ne pas modifier)
           </label>
           <input
             id="password"
@@ -65,7 +103,6 @@ export default function CreateUser() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             className="w-full border rounded-md p-2"
-            required
           />
         </div>
         <div>
@@ -84,17 +121,15 @@ export default function CreateUser() {
                 Sélectionnez un rôle
               </option>
             )}
-            {Object.values(EnumRole)
-              .filter((value): value is { id: number; name: string } => typeof value === "object" && value !== null)
-              .map((role) => (
-                <option key={role.id} value={role.id}>
-                  {role.name}
-                </option>
-              ))}
+            {Array.isArray(roles) && roles.map((role) => (
+              <option key={role.id} value={role.id}>
+                {role.name}
+              </option>
+            ))}
           </select>
         </div>
         <Button type="submit" className="mt-4">
-          Créer
+          Modifier
         </Button>
       </form>
     </div>

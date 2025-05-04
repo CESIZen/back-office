@@ -7,6 +7,7 @@ import {AuthProvider} from "@/context/AuthContext.tsx";
 import PrivateRoute from "@/components/PrivateRoute.tsx";
 import NotFound from "@/pages/NotFound.tsx";
 import CreateUser from "@/pages/user/CreateUser.tsx";
+import EditUser from "@/pages/user/EditUser.tsx";
 
 function AppRoutes() {
   const location = useLocation()
@@ -31,6 +32,7 @@ function AppRoutes() {
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/users" element={<User />} />
           <Route path="/create-user" element={<CreateUser />} />
+          <Route path="/edit-user/:id" element={<EditUser />} />
           <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>

@@ -27,3 +27,26 @@ export const getRoleById = async (id: number): Promise<EnumRole> => {
   console.log(role)
   return role.name;
 }
+
+export const getAllRoles = async (): Promise<Role[]> => {
+  const apiUrl = import.meta.env.VITE_API_URL;
+  const token = localStorage.getItem("userToken");
+
+  if (!token) {
+    throw new Error("Token d'authentification manquant");
+  }
+
+  const response = await fetch(`${apiUrl}/roles`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error("Erreur lors de la récupération des rôles");
+  }
+
+  return response.json();
+};
