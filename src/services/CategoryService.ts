@@ -11,9 +11,19 @@ export async function getAllCategories() {
 export async function getCategoryById(id: number) {
   const response = await fetch(`${apiUrl}/categories/${id}`);
   if (!response.ok) {
-    throw new Error("Erreur lors de la récupération de la catégorie");
+    throw new Error(`Erreur lors de la récupération de la catégorie avec l'ID ${id}`);
   }
-  return response.json();
+
+  const text = await response.text();
+  if (!text) {
+    throw new Error(`Réponse vide pour la catégorie avec l'ID ${id}`);
+  }
+
+  try {
+    return JSON.parse(text);
+  } catch (error) {
+    throw new Error(`Réponse non valide pour la catégorie avec l'ID ${id}`);
+  }
 }
 
 export async function createCategory(name: string, color: string) {
