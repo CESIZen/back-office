@@ -1,3 +1,12 @@
+import {jwtDecode} from "jwt-decode";
+
+interface DecodedToken {
+  sub: number;
+  name: string;
+  email: string;
+  roleId: number;
+}
+
 export const login = async (credentials: { email: string; password: string }) => {
   console.log("Données envoyées :", credentials);
   const apiUrl = import.meta.env.VITE_API_URL;
@@ -20,4 +29,19 @@ export const login = async (credentials: { email: string; password: string }) =>
   }
 
   return JSON.parse(text);
+};
+
+export const getUserIdFromToken = (): number | null => {
+  const token = localStorage.getItem("userToken");
+  if (!token) {
+    return null;
+  }
+
+  try {
+    const decoded: DecodedToken = jwtDecode(token);
+    return decoded.sub;
+  } catch (error) {
+    console.error("Erreur lors du décodage du token :", error);
+    return null;
+  }
 };
