@@ -25,6 +25,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Pencil, Plus, Trash } from "lucide-react";
+import {getUserById} from "@/services/UserService.ts";
 
 
 export default function Information() {
@@ -38,8 +39,7 @@ export default function Information() {
 
         const sortedData = data.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
 
-        // Récupérer les détails des catégories
-        const informationsWithCategories = await Promise.all(
+        const informationsWithDetails = await Promise.all(
           sortedData.map(async (info) => {
             const categories = await Promise.all(
               info.categories.map(async (category) => {
@@ -47,11 +47,13 @@ export default function Information() {
                 return categoryDetails;
               })
             );
-            return { ...info, categories };
+
+            const user = await getUserById(info.userId);
+            return { ...info, categories, user };
           })
         );
 
-        setInformations(informationsWithCategories);
+        setInformations(informationsWithDetails);
       } catch (error) {
         console.error("Erreur lors de la récupération des informations :", error);
       }
@@ -92,7 +94,7 @@ export default function Information() {
         <TableHeader>
           <TableRow>
             <TableHead className="w-[100px]">Titre</TableHead>
-            <TableHead>Contenu</TableHead>
+            <TableHead>Créateur</TableHead>
             <TableHead>Catégorie</TableHead>
             <TableHead className="text-right">Action</TableHead>
           </TableRow>
@@ -100,8 +102,12 @@ export default function Information() {
         <TableBody>
           {informations.map((info) => (
             <TableRow key={info.id}>
-              <TableCell className="font-medium">{info.title}</TableCell>
-              <TableCell>{info.content}</TableCell>
+              <TableCell className="font-medium">
+                {info.title.length > 20 ? `${info.title.substring(0, 20)}...` : info.title}
+              </TableCell>
+              <TableCell>
+                {info.user && info.user.name.length > 15 ? `${info.user.name.substring(0, 15)}...` : info.user.name}
+              </TableCell>
               <TableCell>
                 {info.categories && info.categories.length > 0 ? (
                   info.categories.map((category) => (

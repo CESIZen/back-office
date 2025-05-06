@@ -1,6 +1,6 @@
 const apiUrl = import.meta.env.VITE_API_URL;
 
-class EmotionType {
+class Emotion {
   id: number;
   name: string;
   color: string;
@@ -12,14 +12,14 @@ class EmotionType {
   }
 }
 
-export const getAllEmotionTypes = async (): Promise<EmotionType[]> => {
+export const getAllEmotions = async (): Promise<Emotion[]> => {
   const token = localStorage.getItem("userToken");
 
   if (!token) {
     throw new Error("Token d'authentification manquant");
   }
 
-  const response = await fetch(`${apiUrl}/emotion_types`, {
+  const response = await fetch(`${apiUrl}/emotions`, {
     method: "GET",
     headers: {
       Authorization: `Bearer ${token}`,
@@ -27,69 +27,69 @@ export const getAllEmotionTypes = async (): Promise<EmotionType[]> => {
   });
 
   if (!response.ok) {
-    const errorDetails = await response.json();
-    console.error("Erreur serveur :", errorDetails);
-    throw new Error("Erreur lors de la récupération des types d'émotions");
+    throw new Error("Erreur lors de la récupération des émotions");
   }
 
-  return response.json();
+  const data = await response.json();
+  console.log("Données récupérées :", data);
+  return data;
 };
-export const createEmotionType = async (name: string, color: string): Promise<void> => {
+export const createEmotion = async (name: string, color: string, emotionTypeId: number): Promise<void> => {
   const token = localStorage.getItem("userToken");
 
   if (!token) {
     throw new Error("Token d'authentification manquant");
   }
 
-  const response = await fetch(`${apiUrl}/emotion_types`, {
+  const response = await fetch(`${apiUrl}/emotions`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
     },
-    body: JSON.stringify({ name, color }),
+    body: JSON.stringify({ name, color, emotionTypeId }),
   });
 
   if (!response.ok) {
     const errorDetails = await response.json();
     console.error("Erreur serveur :", errorDetails);
-    throw new Error("Erreur lors de la création du type d'émotion");
+    throw new Error("Erreur lors de la création de l'émotion");
   }
 
   return response.json();
 };
 
-export const updateEmotionType = async (id: number, name: string, color: string): Promise<void> => {
+export const updateEmotion = async (id: number, name: string, color: string, emotionTypeId: number): Promise<void> => {
   const token = localStorage.getItem("userToken");
 
   if (!token) {
     throw new Error("Token d'authentification manquant");
   }
 
-  const response = await fetch(`${apiUrl}/emotion_types/${id}`, {
+  const response = await fetch(`${apiUrl}/emotions/${id}`, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
     },
-    body: JSON.stringify({ name, color }),
+    body: JSON.stringify({ name, color, emotionTypeId }),
   });
 
   if (!response.ok) {
     const errorDetails = await response.json();
     console.error("Erreur serveur :", errorDetails);
-    throw new Error("Erreur lors de la mise à jour du type d'émotion");
+    throw new Error("Erreur lors de la mise à jour de l'émotion");
   }
 };
 
-export const deleteEmotionType = async (id: number): Promise<void> => {
+export const deleteEmotion = async (id: number): Promise<void> => {
   const token = localStorage.getItem("userToken");
 
   if (!token) {
     throw new Error("Token d'authentification manquant");
   }
 
-  const response = await fetch(`${apiUrl}/emotion_types/${id}`, {
+  const response = await fetch(`${apiUrl}/emotions/${id}`, {
     method: "DELETE",
     headers: {
       Authorization: `Bearer ${token}`,
@@ -99,18 +99,18 @@ export const deleteEmotionType = async (id: number): Promise<void> => {
   if (!response.ok) {
     const errorDetails = await response.json();
     console.error("Erreur serveur :", errorDetails);
-    throw new Error("Erreur lors de la suppression du type d'émotion");
+    throw new Error("Erreur lors de la suppression de l'émotion");
   }
 };
 
-export const getEmotionTypeById = async (id: number): Promise<EmotionType> => {
+export const getEmotionById = async (id: number): Promise<Emotion> => {
   const token = localStorage.getItem("userToken");
 
   if (!token) {
     throw new Error("Token d'authentification manquant");
   }
 
-  const response = await fetch(`${apiUrl}/emotion_types/${id}`, {
+  const response = await fetch(`${apiUrl}/emotions/${id}`, {
     method: "GET",
     headers: {
       Authorization: `Bearer ${token}`,
@@ -120,8 +120,9 @@ export const getEmotionTypeById = async (id: number): Promise<EmotionType> => {
   if (!response.ok) {
     const errorDetails = await response.json();
     console.error("Erreur serveur :", errorDetails);
-    throw new Error("Erreur lors de la récupération du type d'émotion");
+    throw new Error("Erreur lors de la récupération de l'émotion");
   }
 
   return response.json();
 };
+
