@@ -17,6 +17,9 @@ import Category from "@/pages/informationCategory/Category.tsx";
 import Information from "@/pages/information/Information.tsx";
 import CreateInformation from "@/pages/information/CreateInformation.tsx";
 import EditInformation from "@/pages/information/EditInformation.tsx";
+import EmotionType from "@/pages/emotionType/EmotionType.tsx";
+import CreateEmotionType from "@/pages/emotionType/CreateEmotionType.tsx";
+import EditEmotionType from "@/pages/emotionType/EditEmotionType.tsx";
 
 function AppRoutes() {
   const location = useLocation()
@@ -51,6 +54,9 @@ function AppRoutes() {
           <Route path="/informations" element={<Information />} />
           <Route path="/create-informations" element={<CreateInformation />} />
           <Route path="/edit-informations/:id" element={<EditInformation />} />
+          <Route path="/type-emotion" element={<EmotionType />} />
+          <Route path="/create-type-emotion" element={<CreateEmotionType />} />
+          <Route path="/edit-type-emotion/:id" element={<EditEmotionType />} />
           <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>
