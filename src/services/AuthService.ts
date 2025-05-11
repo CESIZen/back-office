@@ -24,11 +24,19 @@ export const login = async (credentials: { email: string; password: string }) =>
   }
 
   const text = await response.text();
-  if (!text) {
-    throw new Error("Réponse vide de l'API");
-  }
+  if (!text) throw new Error("Réponse vide de l'API");
+  const data = JSON.parse(text);
+  const decoded: any = jwtDecode(data.access_token);
 
-  return JSON.parse(text);
+  return {
+    access_token: data.access_token,
+    user: {
+      name: decoded.name,
+      email: decoded.email,
+      password: "",
+      roleId: decoded.roleId,
+    }
+  }
 };
 
 export const getUserIdFromToken = (): number | null => {

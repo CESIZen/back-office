@@ -19,18 +19,24 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
+  const [authError, setAuthError] = useState<string | null>(null);
+
 
   const handleLogin = async (credentials: { email: string; password: string }) => {
+    setAuthError(null);
     const response = await login(credentials);
-    console.log("response handleLogin", response);
     if (response.access_token) {
-      if (response.user && response.user.roleId !== 1) {
+      console.log("roleId reçu :", response.user?.roleId); // Debug
+      if (!response.user || parseInt(response.user.roleId as any, 10) !== 1) {
+        setAuthError("Seuls les administrateurs peuvent se connecter");
+        setUser(null);
+        localStorage.removeItem("userToken");
         throw new Error("Seuls les administrateurs peuvent se connecter");
       }
       localStorage.setItem("userToken", response.access_token);
-      console.log('Local Storage Auth Provider',localStorage)
       setUser(response.user);
     } else {
+      setAuthError("Échec de la connexion");
       throw new Error("Échec de la connexion");
     }
   };
@@ -44,6 +50,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   return (
     <AuthContext.Provider value={{ user, login: handleLogin, logout: handleLogout, isAuthenticated }}>
+      {authError && <div style={{ color: "red" }}>{authError}</div>}
       {children}
     </AuthContext.Provider>
   );
