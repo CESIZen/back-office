@@ -56,7 +56,6 @@ const CreateInformation: React.FC = () => {
 
     try {
       const imageUrl = await uploadImage(file);
-      console.log("categories", categories);
       await createInformation({
         title,
         content,

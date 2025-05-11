@@ -6,13 +6,18 @@ import { uploadImage } from "@/services/UploadService";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
+type Category = {
+  id: number;
+  name: string;
+};
+
 const EditInformation: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [imageUrl, setImageUrl] = useState("");
   const [file, setFile] = useState<File | null>(null);
-  const [categories, setCategories] = useState([]);
+  const [categories, setCategories] = useState<Category[]>([]);
   const [selectedCategories, setSelectedCategories] = useState<number[]>([]);
   const [error, setError] = useState("");
   const navigate = useNavigate();
@@ -25,8 +30,7 @@ const EditInformation: React.FC = () => {
           setTitle(information.title);
           setContent(information.content);
           setImageUrl(information.imageUrl);
-
-          setSelectedCategories(information.categories.map((cat: any) => cat.categoryId));
+          setSelectedCategories(information.categories.map((cat: { categoryId: number }) => cat.categoryId));
         }
         const allCategories = await getAllCategories();
         setCategories(allCategories);
@@ -61,15 +65,15 @@ const EditInformation: React.FC = () => {
 
       if (file) {
         uploadedImageUrl = await uploadImage(file);
+        setImageUrl(uploadedImageUrl);
       }
-      console.log(selectedCategories)
-      if (id) {
 
+      if (id) {
         await updateInformation(Number(id), {
           title,
           content,
           imageUrl: uploadedImageUrl,
-          categoryIds: selectedCategories,
+          categories: selectedCategories,
           isActive: true,
         });
         navigate("/informations");
@@ -129,7 +133,7 @@ const EditInformation: React.FC = () => {
         <div>
           <label className="block text-sm font-medium">Catégories</label>
           <div className="space-y-2">
-            {categories.map((category: any) => (
+            {categories.map((category) => (
               <div key={category.id} className="flex items-center">
                 <input
                   type="checkbox"
