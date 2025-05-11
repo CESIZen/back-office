@@ -23,50 +23,52 @@ import EditEmotionType from "@/pages/emotionType/EditEmotionType.tsx";
 import CreateEmotion from "@/pages/emotion/CreateEmotion.tsx";
 import EditEmotion from "@/pages/emotion/EditEmotion.tsx";
 import Emotion from "@/pages/emotion/Emotion.tsx";
+import ForgotPassword from './pages/Auth/ForgotPassword'
+import ResetPassword from "@/pages/Auth/ResetPassword.tsx";
 
 function AppRoutes() {
   const location = useLocation()
 
-  const noLayoutPages = ["/login"]
+  const publicPages = ["/login", "/forgot-password", "/reset-password"]
+  const isPublicPage = publicPages.some(path => location.pathname.startsWith(path))
 
-  const isNoLayoutPage = noLayoutPages.includes(location.pathname)
-
-  return isNoLayoutPage ? (
+  return isPublicPage ? (
     <AuthProvider>
-    <Routes>
-      <Route path="/login" element={<LoginPage />} />
-    </Routes>
+      <Routes>
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
+      </Routes>
     </AuthProvider>
   ) : (
     <AuthProvider>
-    <Layout>
-      <Routes>
-        <Route path="/login" element={<LoginPage />} />
-        <Route element={<PrivateRoute />}>
-          <Route path="/" element={<Navigate to="/dashboard" />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/users" element={<User />} />
-          <Route path="/create-user" element={<CreateUser />} />
-          <Route path="/edit-user/:id" element={<EditUser />} />
-          <Route path="/roles" element={<Role />} />
-          <Route path="/create-role" element={<CreateRole />} />
-          <Route path="/edit-role/:id" element={<EditRole />} />
-          <Route path="/categories" element={<Category />} />
-          <Route path="/create-category" element={<CreateCategory />} />
-          <Route path="/edit-category/:id" element={<EditCategory />} />
-          <Route path="/informations" element={<Information />} />
-          <Route path="/create-informations" element={<CreateInformation />} />
-          <Route path="/edit-informations/:id" element={<EditInformation />} />
-          <Route path="/type-emotion" element={<EmotionType />} />
-          <Route path="/create-type-emotion" element={<CreateEmotionType />} />
-          <Route path="/edit-type-emotion/:id" element={<EditEmotionType />} />
-          <Route path="/emotions" element={<Emotion />} />
-          <Route path="/create-emotions" element={<CreateEmotion />} />
-          <Route path="/edit-emotions/:id" element={<EditEmotion />} />
-          <Route path="*" element={<NotFound />} />
-        </Route>
-      </Routes>
-    </Layout>
+      <Layout>
+        <Routes>
+          <Route element={<PrivateRoute />}>
+            <Route path="/" element={<Navigate to="/dashboard" />} />
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/users" element={<User />} />
+            <Route path="/create-user" element={<CreateUser />} />
+            <Route path="/edit-user/:id" element={<EditUser />} />
+            <Route path="/roles" element={<Role />} />
+            <Route path="/create-role" element={<CreateRole />} />
+            <Route path="/edit-role/:id" element={<EditRole />} />
+            <Route path="/categories" element={<Category />} />
+            <Route path="/create-category" element={<CreateCategory />} />
+            <Route path="/edit-category/:id" element={<EditCategory />} />
+            <Route path="/informations" element={<Information />} />
+            <Route path="/create-informations" element={<CreateInformation />} />
+            <Route path="/edit-informations/:id" element={<EditInformation />} />
+            <Route path="/type-emotion" element={<EmotionType />} />
+            <Route path="/create-type-emotion" element={<CreateEmotionType />} />
+            <Route path="/edit-type-emotion/:id" element={<EditEmotionType />} />
+            <Route path="/emotions" element={<Emotion />} />
+            <Route path="/create-emotions" element={<CreateEmotion />} />
+            <Route path="/edit-emotions/:id" element={<EditEmotion />} />
+            <Route path="*" element={<NotFound />} />
+          </Route>
+        </Routes>
+      </Layout>
     </AuthProvider>
   )
 }

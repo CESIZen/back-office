@@ -121,3 +121,4 @@ export const getUserById = async (id: number): Promise<User> => {
   console.log("Données utilisateur retournées :", user);
   return user;
 };
+

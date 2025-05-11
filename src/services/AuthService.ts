@@ -45,3 +45,44 @@ export const getUserIdFromToken = (): number | null => {
     return null;
   }
 };
+
+export const requestPasswordReset = async (email: string) => {
+  const apiUrl = import.meta.env.VITE_API_URL;
+  const baseUrl = import.meta.env.VITE_BASE_URL || window.location.origin;
+
+  const response = await fetch(`${apiUrl}/auth/forgot-password`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      email,
+      resetUrl: `${baseUrl}/reset-password`
+    }),
+  });
+
+  if (!response.ok) {
+    throw new Error("Erreur lors de la demande de réinitialisation");
+  }
+
+  return await response.json();
+};
+
+export const resetPassword = async (token: string, newPassword: string) => {
+  const apiUrl = import.meta.env.VITE_API_URL;
+
+  const response = await fetch(`${apiUrl}/auth/reset-password`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ token, newPassword }),
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => null);
+    throw new Error(errorData?.message || "Erreur lors de la réinitialisation du mot de passe");
+  }
+
+  return await response.json();
+};
