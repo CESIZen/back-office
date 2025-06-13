@@ -1,5 +1,5 @@
 name: Construction du workflow
-run-name: ${{ github.actor }} a lancé les actions GitHub 🚀
+run-name: ${{github.actor}} a lancé les actions GitHub 🚀
 on: [push]
 jobs:
   build:
