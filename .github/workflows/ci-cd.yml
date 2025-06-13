@@ -41,6 +41,8 @@ jobs:
           push: true
           target: builder
           tags: ghcr.io/cesizen/back-office/vite:${{ github.ref_name }}
+          build-args: |
+            VITE_API_URL=http://ec2-18-204-77-83.compute-1.amazonaws.com/api
 
   deploy-docker-prod:
     runs-on: ubuntu-latest

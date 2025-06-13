@@ -11,6 +11,10 @@ RUN npm install -g serve
 
 COPY . .
 
+ARG VITE_API_URL
+ENV VITE_API_URL=$VITE_API_URL
+RUN echo "VITE_API_URL=$VITE_API_URL" > .env
+
 RUN npm run build
 
 EXPOSE 3000
