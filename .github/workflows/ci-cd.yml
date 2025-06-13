@@ -40,7 +40,7 @@ jobs:
           context: .
           push: true
           target: builder
-          tags: ghcr.io/cesizen/api/nest:${{ github.ref_name }}
+          tags: ghcr.io/cesizen/back-office/vite:${{ github.ref_name }}
 
   deploy-docker-prod:
     runs-on: ubuntu-latest
@@ -58,8 +58,5 @@ jobs:
           key: ${{ secrets.PASSWORD }}
           script: |
             cd cesizen-prod
-            sudo docker compose -f docker-compose.prod.yml pull
-            sudo docker compose -f docker-compose.prod.yml up -d
-
-
-
+            sudo docker compose -f docker-compose-bo.prod.yml pull
+            sudo docker compose -f docker-compose-bo.prod.yml up -d
