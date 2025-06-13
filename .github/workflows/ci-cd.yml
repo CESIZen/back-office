@@ -1,0 +1,65 @@
+name: Construction du workflow
+run-name: ${{ github.actor }} a lancé les actions GitHub 🚀
+on: [push]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "🚀 Lancement des étapes de construction"
+      - name: Vérifier le code du dépôt
+        uses: actions/checkout@v4
+      - run: echo "🚀 Le code du dépôt a été cloné sur le serveur d'exécution."
+      - run: npm clean-install
+      - run: npm run build
+      - name: Enregistrer le cache (node_modules)
+        uses: actions/cache@v4
+        with:
+          path: |
+            node_modules
+          key: ${{ runner.os }}-node_modules-${{ hashFiles('**/package-lock.json') }}
+      - run: echo "🏁 Étapes de construction terminées"
+
+  build-push-docker:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    needs:
+      - build
+    steps:
+      - uses: actions/checkout@v4
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build et push
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          target: builder
+          tags: ghcr.io/cesizen/api/nest:${{ github.ref_name }}
+
+  deploy-docker-prod:
+    runs-on: ubuntu-latest
+    if: ${{github.ref_name == 'main'}}
+    environment:
+      name: prod
+      url: http://ec2-18-204-77-83.compute-1.amazonaws.com/
+    needs:
+      - build-push-docker
+    steps:
+      - uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.PASSWORD }}
+          script: |
+            cd cesizen-prod
+            sudo docker compose -f docker-compose.prod.yml pull
+            sudo docker compose -f docker-compose.prod.yml up -d
+
+
+

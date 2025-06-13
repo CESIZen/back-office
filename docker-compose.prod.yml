@@ -1,0 +1,8 @@
+services:
+  vite:
+    image: ghcr.io/cesizen/back-office/vite:main
+    restart: unless-stopped
+    ports:
+      - "80:3000"
+    environment:
+      - NODE_ENV=production
