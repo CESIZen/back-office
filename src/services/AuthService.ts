@@ -9,7 +9,9 @@ interface DecodedToken {
 
 export const login = async (credentials: { email: string; password: string }) => {
   console.log("Données envoyées :", credentials);
+  console.log("API URL utilisée :", import.meta.env.VITE_API_URL)
   const apiUrl = import.meta.env.VITE_API_URL;
+  console.log("API URL :", apiUrl);
   const response = await fetch(`${apiUrl}/auth/login`, {
     method: "POST",
     headers: {
