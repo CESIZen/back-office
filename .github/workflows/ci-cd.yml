@@ -62,3 +62,15 @@ jobs:
             cd cesizen-prod
             sudo docker compose -f docker-compose-bo.prod.yml pull
             sudo docker compose -f docker-compose-bo.prod.yml up -d
+
+  audit:
+    runs-on: ubuntu-latest
+    needs:
+      - build
+    steps:
+      - run: echo "🚀 Lancement de l'audit"
+      - name: Vérifier le code du dépôt
+        uses: actions/checkout@v4
+      - run: npm clean-install
+      - run: npm audit --audit-level=moderate
+      - run: echo "🏁 Étapes d'audit terminées"
