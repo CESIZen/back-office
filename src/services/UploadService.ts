@@ -1,10 +1,10 @@
-const apiUrl = import.meta.env.VITE_UPLOAD_URL;
+const apiUrl = import.meta.env.VITE_API_URL;
 
 export async function uploadImage(file: File): Promise<string> {
   const formData = new FormData();
   formData.append("file", file);
   console.log('VITE_UPLOAD_URL =', import.meta.env.VITE_UPLOAD_URL);
-  const response = await fetch(`${apiUrl}/image`, {
+  const response = await fetch(`${apiUrl}/uploads/image`, {
     method: "POST",
     body: formData,
   });
