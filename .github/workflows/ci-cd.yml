@@ -2,22 +2,25 @@ name: Construction du workflow
 run-name: ${{github.actor}} a lancé les actions GitHub 🚀
 on: [push]
 jobs:
-  build:
+  audit:
     runs-on: ubuntu-latest
     steps:
-      - run: echo "🚀 Lancement des étapes de construction"
+      - run: echo "🚀 Lancement de l'audit"
       - name: Vérifier le code du dépôt
         uses: actions/checkout@v4
-      - run: echo "🚀 Le code du dépôt a été cloné sur le serveur d'exécution."
       - run: npm clean-install
-      - run: npm run build
-      - name: Enregistrer le cache (node_modules)
-        uses: actions/cache@v4
-        with:
-          path: |
-            node_modules
-          key: ${{ runner.os }}-node_modules-${{ hashFiles('**/package-lock.json') }}
-      - run: echo "🏁 Étapes de construction terminées"
+      - run: npm audit --audit-level=moderate
+      - run: echo "🏁 Étapes d'audit terminées"
+
+  linter:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "🚀 Lancement du linter"
+      - name: Vérifier le code du dépôt
+        uses: actions/checkout@v4
+      - run: npm clean-install
+      - run: npm run lint
+      - run: echo "🏁 Étapes de linter terminées"
 
   build-push-docker:
     runs-on: ubuntu-latest
@@ -25,7 +28,7 @@ jobs:
       contents: read
       packages: write
     needs:
-      - build
+      - audit
     steps:
       - uses: actions/checkout@v4
       - name: Login to GitHub Container Registry
@@ -62,15 +65,3 @@ jobs:
             cd cesizen-prod
             sudo docker compose -f docker-compose-bo.prod.yml pull
             sudo docker compose -f docker-compose-bo.prod.yml up -d
-
-  audit:
-    runs-on: ubuntu-latest
-    needs:
-      - build
-    steps:
-      - run: echo "🚀 Lancement de l'audit"
-      - name: Vérifier le code du dépôt
-        uses: actions/checkout@v4
-      - run: npm clean-install
-      - run: npm audit --audit-level=moderate
-      - run: echo "🏁 Étapes d'audit terminées"
