@@ -34,7 +34,7 @@ export default function Dashboard() {
       <div className="grid gap-4 md:grid-cols-2">
         <Card>
           <CardHeader>
-            <CardTitle>Total des gentils utilisateurs</CardTitle>
+            <CardTitle>Total des utilisateurs</CardTitle>
           </CardHeader>
           <CardContent>
             <p className="text-2xl font-bold">{totalUsers}</p>
