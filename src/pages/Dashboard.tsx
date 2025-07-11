@@ -42,7 +42,7 @@ export default function Dashboard() {
         </Card>
         <Card>
           <CardHeader>
-            <CardTitle>Total des informations</CardTitle>
+            <CardTitle>Total des informations interessante</CardTitle>
           </CardHeader>
           <CardContent>
             <p className="text-2xl font-bold">{totalInformations}</p>
